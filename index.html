@@ -518,6 +518,27 @@
   #passBtn.row:active, #onlineBtn.row:active { background: #fff6fb; box-shadow: none !important; }
   .stickybuy { border-radius: 22px; }
   .stickybuy a { border-radius: 14px; background: #e9579c; }
+  /* 쓰담 단계에서 무지개 링·왕관이 로고와 겹치지 않게 */
+  .herocard .heroWrap.glow { margin-top: 24px; margin-bottom: 22px; }
+  .herocard .heroWrap.king { margin-top: 40px; }
+  /* 분석 중 화면: 어떤 기기에서도 화면 정중앙 */
+  #loading.on { position: fixed; inset: 0; z-index: 5; display: flex; align-items: center; justify-content: center; padding: 16px; }
+  #loading .card { width: 100%; max-width: 420px; margin: 0; padding: 44px 20px 40px; }
+  .stickybuy > div { min-width: 0; }
+  #stickyName, #stickySub { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  /* 매장 혜택: 직원 확인 */
+  .modal .box.pass { max-height: 94vh; overflow: auto; }
+  .staffbtn { display: block; width: 100%; margin: 12px 0 2px; border: 1.5px dashed #d9c9ea; background: #faf7fd; color: #6d5a88; border-radius: 16px; padding: 11px; font-size: 14px; cursor: pointer; font-family: 'Pretendard', sans-serif; font-weight: 600; }
+  .staffform { display: grid; gap: 8px; margin-top: 10px; text-align: left; }
+  .staffform select, .staffform input { width: 100%; border: 1.5px solid #e6dcf2; border-radius: 14px; padding: 11px 12px; font-size: 15px; font-family: 'Pretendard', sans-serif; color: var(--ink); background: #fff; }
+  .staffform .btn { margin-top: 2px; font-size: 16px; padding: 12px; }
+  .staffmsg { font-size: 13px; color: #d0457f; text-align: center; min-height: 18px; font-family: 'Pretendard', sans-serif; }
+  .usedstamp { margin: 12px auto 0; display: inline-block; border: 3px solid #8a7aa6; color: #6d5a88; border-radius: 14px; padding: 8px 16px; transform: rotate(-4deg); font-family: 'AltBold', sans-serif; font-size: 18px; line-height: 1.35; }
+  .usedstamp small { display: block; font-family: 'Pretendard', sans-serif; font-size: 12.5px; font-weight: 600; }
+  .pass.used .passclock { background: #c9bfd6; animation: none; }
+  .pass.used .passimg { animation: none; filter: grayscale(.5); }
+  .pass.used .passoffer { background: #f3f0f7; color: #9a8bb0; text-decoration: line-through; }
+  #passBtn.used .tx b::after { content: ' ✔'; }
 </style>
 </head>
 <body>
@@ -644,6 +665,7 @@
       <div class="pick" id="pick"></div>
       <button class="btn" id="inviteBtn">💌 친구 초대하고 궁합 보기</button>
       <div class="minirow"><button class="mini" id="saveTree">🌳 나무 이미지 저장</button><button class="mini" id="refreshBtn">↻ 나무 새로고침</button></div>
+      <button class="textbtn" id="myLinkBtn">🔗 다른 폰·앱에서도 내 결과 보기</button>
       <div class="note" id="treeNote"></div>
     </div>
         <button class="textbtn" id="retryBtn">테스트 다시 하기</button>
@@ -675,6 +697,17 @@
     <div class="passtype" id="passType"></div>
     <div class="passoffer" id="passOffer"></div>
     <div class="passnote">직원에게 이 화면을 보여주세요<br>시계가 움직이는 화면만 유효해요</div>
+    <div class="usedstamp" id="usedStamp" style="display:none"></div>
+    <div id="staffBox">
+      <button class="staffbtn" id="staffOpen">🔒 직원 확인 · 혜택 사용 처리</button>
+      <div class="staffform" id="staffForm" style="display:none">
+        <select id="staffStore"><option value="">매장 선택</option></select>
+        <input id="staffPin" type="password" inputmode="numeric" maxlength="8" placeholder="직원 확인 코드" autocomplete="off">
+        <input id="staffAmt" type="text" inputmode="numeric" placeholder="결제 금액 (원, 선택)" autocomplete="off">
+        <button class="btn" id="staffOk">사용 처리하기</button>
+        <div class="staffmsg" id="staffMsg"></div>
+      </div>
+    </div>
     <button class="btn soft" id="passClose">닫기</button>
   </div>
 </div>
@@ -795,7 +828,7 @@
       best: ['mickey', '서로의 계획을 응원해 주는 든든한 파트너'], worst: ['stitch', '정리해 둔 리본 컬렉션 앞에서 스티치 손이 근질근질'] },
     PWHR: { c: 'tigger', title: '통통 튀는 텐션 부스터', tags: ['#일단해보자', '#분위기메이커', '#가만히있으면병나'],
       traits: ['단톡방에 "언제 볼래?"를 제일 먼저 보내요', '새로 생긴 가게는 오픈 첫 주에 꼭 가봐야 해요', '계획은 없어도 이상하게 다 재밌게 끝나요', '텐션이 높아도 친구가 힘들면 제일 먼저 알아채요'],
-      best: ['oyster', '"가보자!" 한마디에 둘 다 신발부터 신는 사이'], worst: ['eeyore', '좋은 친구지만 아침 7시 산책은 조금 곤란해요'] },
+      best: ['oyster', '"가보자!" 한마디에 둘 다 신발부터 신는 사이'], worst: ['eeyore', '아침 7시 산책 가자는데 이불 밖으로 안 나오는 친구'] },
     PWHN: { c: 'oyster', title: '궁금하면 졸졸 아기 굴', tags: ['#호기심천국', '#일단따라가봄', '#해맑음이무기'],
       traits: ['"어디 가?"보다 "나도 갈래!"가 먼저 나와요', '처음 보는 사람과도 5분 만에 친해져요', '계획표는 없지만 그날의 작은 행복을 제일 잘 찾아요', '칭찬 한마디에 하루 종일 기분이 좋아요'],
       best: ['tigger', '궁금한 건 일단 같이 가보는 모험 메이트'], worst: ['rabbit', '꽃 구경하다 멈춘 순간 "늦었어 늦었어!"'] },
@@ -803,7 +836,7 @@
       traits: ['화나면 바로 티 나지만 5분이면 풀려요', '돌려 말하기보다 직진 화법', '계획보다 일단 부딪혀 보는 행동파', '투덜대도 친구 일엔 제일 먼저 달려가요'],
       best: ['daisy', '투닥거려도 결국 함께인 오래된 단짝'], worst: ['chip', '장난꾸러기 다람쥐에게 매번 당하는 사이'] },
     PWKN: { c: 'cheshire', title: '능청 만렙 미스터리', tags: ['#능청', '#속을알수없음', '#여유만만'],
-      traits: ['진지한 순간에도 농담 한마디로 분위기 전환', '갑자기 나타났다 갑자기 사라지는 자유로운 영혼', '감정보다 상황을 한발 떨어져서 봐요', '급할 게 뭐 있어, 다 잘 될 거야'],
+      traits: ['진지한 순간에도 농담 한마디로 분위기 전환', '갑자기 나타났다 갑자기 사라지는 자유로운 영혼', '감정보다 상황을 한발 떨어져서 봐요', '급할 게 뭐 있어, 다 잘될 거야'],
       best: ['stitch', '장난에 장난을 더하는 최강 콤비'], worst: ['mickey', '"다들 모였지?" 확인하는 순간 이미 사라짐'] },
     CMHR: { c: 'moana', title: '목표 직진 모험가', tags: ['#내길은내가', '#책임감', '#한번정하면끝까지'],
       traits: ['혼자 있는 시간에 목표를 세우고 에너지를 모아요', '결심하면 누가 말려도 끝까지 가요', '소중한 사람을 위해서라면 누구보다 용감해져요', '계획은 확실하게, 마음은 뜨겁게'],
@@ -852,27 +885,27 @@
     { axis: 0, q: '우루포차 인형이 우리 집에 왔다! 제일 먼저 하는 일은?', a: '사진 찍어서 단톡방에 자랑하기 📸', b: '침대 머리맡 명당자리에 앉혀주기 🛏️' },
     { axis: 1, q: '디즈니스토어 매장에 들어서면 나는?', a: '신상 → 인형 코너 → 계산대, 동선 이미 정해둠', b: '발길 닿는 대로 빙글빙글 구경 시작', flip: true },
     { axis: 2, q: '우루포차 16종이 한꺼번에 눈앞에! 데려갈 친구를 고르는 기준은?', a: '눈 마주친 순간 "얘다!" 하는 느낌 💘', b: '내 방 인테리어 컬러랑 찰떡인 친구 🎨' },
-    { axis: 3, q: '디즈니스토어 신상 소식이 떴다!', a: '오늘 퇴근길에 바로 보러 간다 🏃', b: '주말에 여유 있을 때 천천히 구경 갈래 ☕', flip: true },
+    { axis: 3, q: '디즈니스토어 신상 소식이 떴다!', a: '오늘 바로 보러 간다 🏃', b: '주말에 여유 있을 때 천천히 구경 갈래 ☕', flip: true },
     { axis: 0, q: '매장에서 신나는 디즈니 OST가 흘러나온다 🎵', a: '나도 모르게 리듬 타며 흥얼흥얼', b: '속으로만 따라 부르고 겉으론 평온', flip: true },
     { axis: 1, q: '내 가방 속 상태는?', a: '칸칸이 제자리, 뭐가 어딨는지 다 앎 🎒', b: '일단 다 들어 있음. 찾는 건 운에 맡김 🍀' },
-    { axis: 2, q: '친구가 깜짝 선물로 우루포차를 줬다!', a: '내 최애를 어떻게 알았지… 감동 🥹', b: '오 이거 신상이네? 어디서 샀어? 👀', flip: true },
+    { axis: 2, q: '친구가 깜짝 선물로 우루포차를 줬다!', a: '내 최애를 어떻게 알았지… 감동 🥹', b: '오, 이건 책상 위에 두면 딱이겠다 📐', flip: true },
     { axis: 3, q: '기다리던 택배가 도착했다 📦', a: '현관에서 바로 뜯어보기', b: '씻고 편한 옷 입고 의식처럼 개봉' },
     { axis: 0, q: '비 오는 주말 오후 ☔', a: '비 오는 날 감성 카페 찾아 출동', b: '이불 + 인형 + 영화 = 완벽한 주말', flip: true },
     { axis: 1, q: '인형들을 진열하는 나만의 방식은?', a: '키 순서, 색깔별로 나란히 줄 세우기 📏', b: '그날 기분 따라 자리 바꿔주기 🔄', flip: true },
-    { axis: 2, q: '새로 온 인형 이름을 지어준다면?', a: '느낌대로 "몽글이", "보들이" ☁️', b: '데려온 날을 기억하게 "시월이" 📅' },
+    { axis: 2, q: '우루포차 후기를 남긴다면?', a: '안는 순간 마음이 몽글몽글해졌어요 🥹', b: '크기 딱 좋고 털 빠짐 없어요. 재구매 의사 있음 ⭐' },
     { axis: 3, q: '갖고 싶던 우루포차가 품절 임박이래!', a: '고민은 배송만 늦출 뿐, 바로 결제 🛒', b: '찜해 두고 하룻밤 더 고민해 볼래 🌙', flip: true }
   ];
 
   /* ===== 다국어 (영어 · 일본어 · 중국어 간체). 한국어는 위 원본 데이터를 그대로 씀 ===== */
   var KO_UI = {
     home_title: '우루포차 테스트', home_lead: '12개 질문으로 찾는 나랑 꼭 닮은 우루포차!<br>결과를 공유하면 친구와의 궁합도 볼 수 있어요.',
-    nick_ph: '닉네임 (최대 8자)', start: '테스트 시작하기', back: '← 이전', msg_nick: '닉네임을 입력해 주세요.',
+    nick_ph: '닉네임 (최대 8자)', join_btn: '💞 내 결과로 {nick}님과 궁합 보기', retake_btn: '새로 테스트하기', invited_has: '💌 {nick}님이 초대했어요! 다시 안 해도 바로 궁합을 볼 수 있어요', mylink_btn: '🔗 다른 폰·앱에서도 내 결과 보기', mylink_copied: '내 결과 링크를 복사했어요! 나만 보관해 두세요', mylink_text: '🔗 내 우루포차 결과 링크 (나만 보관하세요)', restored: '내 결과를 불러왔어요 🧸', start: '테스트 시작하기', back: '← 이전', msg_nick: '닉네임을 입력해 주세요.',
     loading_title: '보들보들 분석 중', loading_sub: '나와 꼭 닮은 우루포차를 찾고 있어요',
     tab_result: '내 결과', tab_match: '궁합', tab_gift: '혜택', tab_tree: '친구 나무',
     squish_hint: '👆 인형을 눌러서 <b>쓰담쓰담</b> 해보세요', save_img: '📷 결과 이미지 저장', invite: '💌 친구 초대',
     next_match: '궁합 보러 가기 ›', best_label: '💞 나의 천생연분', set_sub: '천생연분 세트로 같이 데려가기', worst_label: '💥 은근 삐걱',
     next_gift: '결과 혜택 받으러 가기 ›', gift_title: '🎁 결과 받은 사람 혜택',
-    pass_t: '매장에서 받기', pass_s: '직원에게 혜택 화면 보여주기', online_t: '온라인에서 받기', online_s: '더현대Hi 결제 때 코드 입력',
+    used_t: '매장 혜택 사용 완료', used_s: '{at} · {store}', pass_t: '매장에서 받기', pass_s: '직원에게 혜택 화면 보여주기', online_t: '온라인에서 받기', online_s: '더현대Hi 결제 때 코드 입력',
     store_t: '가까운 디즈니스토어', store_s: '네이버 지도로 길찾기', more_s: '더현대Hi에서 구경하기', next_tree: '친구 나무 보러 가기 ›',
     tree_title: '🌳 나의 우루포차 나무', tree_lead: '내 링크로 테스트한 친구들이 나무에 열려요.<br>친구를 누르면 나와의 궁합이 보여요.',
     invite_btn: '💌 친구 초대하고 궁합 보기', save_tree: '🌳 나무 이미지 저장', refresh: '↻ 나무 새로고침', my_again: '🌳 내 결과 · 나무 다시 보기', retry: '테스트 다시 하기',
@@ -882,18 +915,18 @@
     share: '공유하기', save_image: '이미지 저장하기', invite_title: '💌 친구 초대 링크', invite_desc: '아래 내용을 복사해서 친구에게 보내주세요!', copy: '복사하기',
     tmi_title: '{name}의 우루포차 TMI', guide_hello: '안녕! 난 {name}! 디즈니스토어의 <b>우루포차</b>야 👋 같이 가보자!',
     guide_half: '벌써 절반! 우루포차들이 응원 중 📣 ', guide_last: '마지막 질문! 어떤 우루포차가 기다리고 있을까? 🎁',
-    pre: '{nick}님은', take: '나의 {name} 데려가기', more_title: '{name}의 다른 아이템', rarity: '참여자 {total}명 중 {pct}%만 {pocha}예요',
+    pre: '{nick}님은', take: '나의 {name} 데려가기', more_title: '{name}의 다른 아이템', rarity: '참여자 {total}명 중 {pct}%만 {pocha}{이에요}',
     tree_err: '나무를 불러오지 못했어요. 잠시 후 새로고침해 주세요.', tree_demo: '미리보기 모드: 예시 친구들로 보여주고 있어요. 서버 주소를 넣으면 실제 친구가 열려요.',
     badge_demo: '예시', badge_friends: '친구 {n}명', friend: '친구', inviter_title: '💌 {nick}님과의 궁합', inv_banner: '💞 {nick}님과 {label} {score}% · 궁합 보기',
     img_footer: '나랑 닮은 우루포차 찾으러 가기 →', img_who: '{nick}님은', img_best: '천생연분 {pocha} {name} 💞',
     tree_img_title: '{nick}님의 우루포차 나무', tree_img_sub: '함께한 친구 {n}명 🌳', me_suffix: ' (나)',
     tree_loading: '나무를 불러오는 중이에요', img_making: '🖼️ 이미지를 만들고 있어요', tree_empty: '아직 열매가 없어요 🌱 친구를 초대해 보세요',
     pick_root: '나무의 주인공! 친구를 초대하면 나무가 자라요 🌱', pick_compat: '나와의 궁합 · ', gift_to: '🎁 {nick}님에게 {name} 선물하기',
-    share_text: '나는 {pocha} {name}래 🧸\n너도 우루포차 테스트 해보고 우리 궁합 보자 💞', share_title: '우루포차 테스트', share_img: '나는 {pocha}래 🧸 우루포차 테스트 ',
+    share_text: '나는 {pocha} {name}{이래} 🧸\n너도 우루포차 테스트 해보고 우리 궁합 보자 💞', share_title: '우루포차 테스트', share_img: '나는 {pocha}{이래} 🧸 우루포차 테스트 ',
     copied_invite: '초대 링크를 복사했어요! 친구에게 보내보세요 💌', copied: '복사했어요! 친구에게 보내보세요 💌', copy_manual: '글자를 길게 눌러 복사해 주세요',
-    pet_count: '🤲 <b>쓰담쓰담 {n}번</b>', pet5: '💗 보들 입문자!|{name}가 기분 좋아서 하트 뿅뿅', pet10: '💞 말랑 단짝!|{name}랑 완전 친해졌어요',
-    pet15: '🌀 빙글빙글!|{name}가 너무 신나서 한 바퀴 돌았어요', pet20: '🌈 무지개 오라 획득!|{name}가 반짝반짝 빛나기 시작했어요',
-    pet30: '👑 쓰담 마스터!|이 정도면 {name}를 데려가야 해요 🥹', petN: '쓰담쓰담 {n}번!|{name}가 녹아내리는 중 🫠', sticky_master: '쓰담 마스터 인증! 이제 진짜로 안아줄 차례',
+    pet_count: '🤲 <b>쓰담쓰담 {n}번</b>', pet5: '💗 보들 입문자!|{name}{가} 기분 좋아서 하트 뿅뿅', pet10: '💞 말랑 단짝!|{name}{랑} 완전 친해졌어요',
+    pet15: '🌀 빙글빙글!|{name}{가} 너무 신나서 한 바퀴 돌았어요', pet20: '🌈 무지개 오라 획득!|{name}{가} 반짝반짝 빛나기 시작했어요',
+    pet30: '👑 쓰담 마스터!|이 정도면 {name}{를} 데려가야 해요 🥹', petN: '쓰담쓰담 {n}번!|{name}{가} 녹아내리는 중 🫠', sticky_master: '쓰담 마스터 인증! 이제 진짜로 안아줄 차례',
     peek_toast: '{name}: 보들보들 🤍', egg_title: '🦪 숨은 아기 굴 발견!', egg_desc: '찾았다! 눈썰미 최고예요 👀 아기 굴 오이스터도 보들보들 우루포차 친구랍니다.',
     pass_name: '{nick}님의 {name} 우루포차', code_copied: '코드 {code} 복사! 더현대Hi 결제할 때 입력하세요', code_manual: '더현대Hi 쿠폰 코드: {code}',
     find_route: '길찾기 →', nearest: '⭐ 가장 가까운 매장: {name} ({d})', no_loc: '위치를 확인하지 못했어요. 가실 매장을 골라주세요.', locating: '📍 내 위치를 확인하고 있어요',
@@ -906,13 +939,13 @@
     label: 'EN',
     ui: {
       home_title: 'Urupocha Test', home_lead: 'Find the Urupocha-chan plush that’s just like you in 12 questions!<br>Share your result to check your match with friends.',
-      nick_ph: 'Nickname (up to 8)', start: 'Start the test', back: '← Back', msg_nick: 'Please enter a nickname.',
+      nick_ph: 'Nickname (up to 8)', join_btn: '💞 Check match with {nick} using my result', retake_btn: 'Take the test again', invited_has: '💌 {nick} invited you! No need to retake — check your match with your result', mylink_btn: '🔗 Open my result on another phone/app', mylink_copied: 'Your result link is copied! Keep it to yourself', mylink_text: '🔗 My Urupocha result link (keep it private)', restored: 'Your result is loaded 🧸', start: 'Start the test', back: '← Back', msg_nick: 'Please enter a nickname.',
       loading_title: 'Fluffy analysis…', loading_sub: 'Finding the Urupocha-chan that’s just like you',
       tab_result: 'Me', tab_match: 'Match', tab_gift: 'Perks', tab_tree: 'Tree',
       squish_hint: '👆 Tap the plush to give it a <b>squish</b>', save_img: '📷 Save image', invite: '💌 Invite friends',
       next_match: 'See my matches ›', best_label: '💞 My perfect match', set_sub: 'Take home the perfect-match set', worst_label: '💥 A little bumpy',
       next_gift: 'Get my result perk ›', gift_title: '🎁 Perk for test-takers',
-      pass_t: 'Get it in store', pass_s: 'Show this screen to our staff', online_t: 'Get it online', online_s: 'Enter the code at The Hyundai Hi checkout',
+      used_t: 'In-store perk used', used_s: '{at} · {store}', pass_t: 'Get it in store', pass_s: 'Show this screen to our staff', online_t: 'Get it online', online_s: 'Enter the code at The Hyundai Hi checkout',
       store_t: 'Nearest Disney Store', store_s: 'Directions on the map', more_s: 'Browse on The Hyundai Hi', next_tree: 'See my friend tree ›',
       tree_title: '🌳 My Urupocha Tree', tree_lead: 'Friends who take the test from your link grow on your tree.<br>Tap a friend to see your match.',
       invite_btn: '💌 Invite friends & check matches', save_tree: '🌳 Save tree image', refresh: '↻ Refresh tree', my_again: '🌳 See my result & tree again', retry: 'Take the test again',
@@ -949,14 +982,14 @@
       ['An Urupocha-chan plush just arrived at your home! What do you do first?', 'Snap a photo and show it off in the group chat 📸', 'Give it the best spot by my pillow 🛏️'],
       ['When I walk into a Disney Store…', 'New arrivals → plush corner → checkout. Route already planned', 'I wander wherever my feet take me'],
       ['All 16 Urupocha-chan are right in front of you! How do you choose?', 'The moment our eyes meet: “It’s you!” 💘', 'The one that matches my room colors 🎨'],
-      ['Disney Store just announced new arrivals!', 'I’m going on my way home today 🏃', 'I’ll take a slow look on the weekend ☕'],
+      ['Disney Store just announced new arrivals!', 'Going to see them today 🏃', 'I’ll take a slow look on the weekend ☕'],
       ['A fun Disney song starts playing in the store 🎵', 'I’m humming and grooving without realizing', 'Singing along inside, calm on the outside'],
       ['What’s inside my bag?', 'Everything in its pocket. I know where it all is 🎒', 'It’s all in there. Finding things is up to luck 🍀'],
-      ['A friend surprises you with an Urupocha-chan!', 'How did you know my favorite… I’m so touched 🥹', 'Oh, is this new? Where did you get it? 👀'],
+      ['A friend surprises you with an Urupocha-chan!', 'How did you know my favorite… I’m so touched 🥹', 'Ooh, this will fit perfectly on my desk 📐'],
       ['The package you’ve been waiting for has arrived 📦', 'Open it right at the door', 'Shower, comfy clothes, then a little unboxing ritual'],
       ['A rainy weekend afternoon ☔', 'Off to find a cozy café on a rainy day', 'Blanket + plush + movie = the perfect weekend'],
       ['How do you display your plushies?', 'In a neat row by height and color 📏', 'Move them around depending on my mood 🔄'],
-      ['If you named your new plush…', 'Whatever it feels like: “Fluffy”, “Mochi” ☁️', 'Something to remember the day: “October” 📅'],
+      ['If you wrote a review of your Urupocha-chan…', 'The moment I hugged it, my heart melted 🥹', 'Perfect size, no shedding. Would buy again ⭐'],
       ['The Urupocha-chan you wanted is almost sold out!', 'Thinking only delays shipping. Buying now 🛒', 'Saving it and sleeping on it one more night 🌙']
     ],
     types: {
@@ -1001,13 +1034,13 @@
     label: '日本語',
     ui: {
       home_title: 'うるぽちゃテスト', home_lead: '12の質問で、あなたにそっくりな<br>うるぽちゃちゃんを見つけよう！<br>結果をシェアすると友だちとの相性もわかるよ。',
-      nick_ph: 'ニックネーム（8文字まで）', start: 'テストをはじめる', back: '← もどる', msg_nick: 'ニックネームを入力してください。',
+      nick_ph: 'ニックネーム（8文字まで）', join_btn: '💞 今の結果のまま{nick}さんと相性を見る', retake_btn: 'もう一度テストする', invited_has: '💌 {nick}さんから招待されました！やり直さなくても今の結果で相性が見られるよ', mylink_btn: '🔗 別のスマホ・アプリでも結果を見る', mylink_copied: '結果リンクをコピーしたよ！自分だけで保管してね', mylink_text: '🔗 わたしのうるぽちゃ結果リンク（自分だけで保管）', restored: '結果を読み込んだよ 🧸', start: 'テストをはじめる', back: '← もどる', msg_nick: 'ニックネームを入力してください。',
       loading_title: 'ふわふわ分析中…', loading_sub: 'あなたにそっくりなうるぽちゃちゃんを探しています',
       tab_result: '結果', tab_match: '相性', tab_gift: '特典', tab_tree: 'ツリー',
       squish_hint: '👆 ぬいぐるみをタップして<b>なでなで</b>してみてね', save_img: '📷 結果画像を保存', invite: '💌 友だちを招待',
       next_match: '相性を見る ›', best_label: '💞 わたしの運命の相手', set_sub: '運命セットでいっしょにお迎え', worst_label: '💥 ちょっとギクシャク',
       next_gift: '結果特典を受け取る ›', gift_title: '🎁 テスト参加者特典',
-      pass_t: '店舗で受け取る', pass_s: 'スタッフにこの画面を見せる', online_t: 'オンラインで受け取る', online_s: 'The Hyundai Hiの決済時にコード入力',
+      used_t: '店舗特典 使用済み', used_s: '{at} · {store}', pass_t: '店舗で受け取る', pass_s: 'スタッフにこの画面を見せる', online_t: 'オンラインで受け取る', online_s: 'The Hyundai Hiの決済時にコード入力',
       store_t: '近くのディズニーストア', store_s: '地図で道案内', more_s: 'The Hyundai Hiで見る', next_tree: 'フレンドツリーを見る ›',
       tree_title: '🌳 わたしのうるぽちゃツリー', tree_lead: 'あなたのリンクからテストした友だちがツリーに実るよ。<br>友だちをタップすると相性が見られるよ。',
       invite_btn: '💌 友だちを招待して相性を見る', save_tree: '🌳 ツリー画像を保存', refresh: '↻ ツリーを更新', my_again: '🌳 わたしの結果・ツリーをもう一度', retry: 'もう一度テストする',
@@ -1044,14 +1077,14 @@
       ['うるぽちゃちゃんがおうちに来た！最初にすることは？', '写真を撮ってグループチャットで自慢 📸', '枕元のベストポジションに座らせる 🛏️'],
       ['ディズニーストアに入ったら、わたしは…', '新商品 → ぬいぐるみ → レジ、ルートは決定済み', '足の向くままぐるぐる見て回る'],
       ['うるぽちゃちゃん16種が目の前に！選ぶ基準は？', '目が合った瞬間「この子だ！」💘', '部屋のインテリアの色にぴったりな子 🎨'],
-      ['ディズニーストアの新商品情報が出た！', '今日の帰り道にすぐ見に行く 🏃', '週末にゆっくり見に行こう ☕'],
+      ['ディズニーストアの新商品情報が出た！', '今日すぐ見に行く 🏃', '週末にゆっくり見に行こう ☕'],
       ['お店で楽しいディズニーの曲が流れてきた 🎵', '思わずリズムにのって鼻歌', '心の中だけで歌って、外見は平静'],
       ['わたしのバッグの中は？', 'ポケットごとに定位置、どこに何があるか全部わかる 🎒', 'とりあえず全部入ってる。探すのは運まかせ 🍀'],
-      ['友だちがサプライズでうるぽちゃちゃんをくれた！', 'どうして推しがわかったの…感動 🥹', 'あ、これ新作？どこで買ったの？👀'],
+      ['友だちがサプライズでうるぽちゃちゃんをくれた！', 'どうして推しがわかったの…感動 🥹', 'お、これはデスクに置いたらぴったりだね 📐'],
       ['待っていた荷物が届いた 📦', '玄関ですぐに開ける', 'お風呂に入って部屋着で、儀式のように開封'],
       ['雨の週末の午後 ☔', '雨の日のおしゃれカフェを探しに出動', 'ふとん＋ぬいぐるみ＋映画＝完璧な週末'],
       ['ぬいぐるみの飾り方は？', '背の順・色別にきれいに並べる 📏', 'その日の気分で場所を入れ替える 🔄'],
-      ['新しいぬいぐるみに名前をつけるなら？', '感覚で「もふもふ」「ふわり」☁️', 'お迎えした日を忘れないように「じゅうがつ」📅'],
+      ['うるぽちゃちゃんのレビューを書くなら？', 'ぎゅっとした瞬間、心がふわっとほどけました 🥹', 'サイズちょうどよし、毛抜けなし。リピートあり ⭐'],
       ['欲しかったうるぽちゃちゃんが売り切れ間近！', '迷うのは配送が遅れるだけ、今すぐ購入 🛒', 'お気に入り登録して、もう一晩考える 🌙']
     ],
     types: {
@@ -1096,13 +1129,13 @@
     label: '中文',
     ui: {
       home_title: 'Urupocha 测试', home_lead: '12道题，找到和你最像的 Urupocha 玩偶！<br>分享结果，还能看看和朋友的契合度哦。',
-      nick_ph: '昵称（最多8个字）', start: '开始测试', back: '← 上一题', msg_nick: '请输入昵称。',
+      nick_ph: '昵称（最多8个字）', join_btn: '💞 用现在的结果看和{nick}的契合度', retake_btn: '重新测试', invited_has: '💌 {nick}邀请了你！不用重测，直接用现在的结果看契合度', mylink_btn: '🔗 在其他手机/应用查看我的结果', mylink_copied: '已复制我的结果链接！请自己保存好', mylink_text: '🔗 我的 Urupocha 结果链接（请勿外传）', restored: '已载入你的结果 🧸', start: '开始测试', back: '← 上一题', msg_nick: '请输入昵称。',
       loading_title: '软萌分析中…', loading_sub: '正在寻找和你最像的 Urupocha',
       tab_result: '我的结果', tab_match: '契合度', tab_gift: '福利', tab_tree: '好友树',
       squish_hint: '👆 点一点玩偶，给它<b>摸摸头</b>吧', save_img: '📷 保存结果图', invite: '💌 邀请好友',
       next_match: '查看契合度 ›', best_label: '💞 我的天生一对', set_sub: '天生一对组合一起带回家', worst_label: '💥 有点小摩擦',
       next_gift: '领取结果福利 ›', gift_title: '🎁 测试参与者福利',
-      pass_t: '到店领取', pass_s: '向店员出示此页面', online_t: '线上领取', online_s: '在 The Hyundai Hi 结账时输入代码',
+      used_t: '门店福利 已使用', used_s: '{at} · {store}', pass_t: '到店领取', pass_s: '向店员出示此页面', online_t: '线上领取', online_s: '在 The Hyundai Hi 结账时输入代码',
       store_t: '附近的迪士尼商店', store_s: '地图导航', more_s: '在 The Hyundai Hi 逛逛', next_tree: '查看好友树 ›',
       tree_title: '🌳 我的 Urupocha 好友树', tree_lead: '通过你的链接参加测试的朋友会长在树上。<br>点一点朋友就能看到契合度。',
       invite_btn: '💌 邀请好友看契合度', save_tree: '🌳 保存好友树图片', refresh: '↻ 刷新好友树', my_again: '🌳 再看我的结果和好友树', retry: '再测一次',
@@ -1139,14 +1172,14 @@
       ['Urupocha 玩偶来到我家啦！第一件事做什么？', '拍照发到群里炫耀 📸', '让它坐在枕边的最佳位置 🛏️'],
       ['走进迪士尼商店的我…', '新品 → 玩偶区 → 收银台，路线早已定好', '随心所欲地转来转去'],
       ['16只 Urupocha 全在眼前！选哪只的标准是？', '对上眼的那一刻：“就是你了！”💘', '和我房间配色最搭的那只 🎨'],
-      ['迪士尼商店发布新品消息了！', '今天下班路上马上去看 🏃', '周末有空再慢慢去逛 ☕'],
+      ['迪士尼商店发布新品消息了！', '今天就马上去看 🏃', '周末有空再慢慢去逛 ☕'],
       ['店里响起欢快的迪士尼音乐 🎵', '不知不觉跟着节奏哼起来', '心里跟着唱，表面很淡定'],
       ['我的包里是什么状态？', '每样东西都有固定位置，全都知道在哪 🎒', '反正都在里面，找东西全靠运气 🍀'],
-      ['朋友给了我一只 Urupocha 当惊喜礼物！', '怎么知道我最爱这只…好感动 🥹', '哦，这是新品吧？在哪买的？👀'],
+      ['朋友给了我一只 Urupocha 当惊喜礼物！', '怎么知道我最爱这只…好感动 🥹', '哦，这个放在书桌上刚刚好 📐'],
       ['等了好久的快递到了 📦', '在门口马上拆开', '洗完澡换上舒服的衣服，像仪式一样开箱'],
       ['下雨的周末午后 ☔', '出门去找雨天氛围咖啡馆', '被子 + 玩偶 + 电影 = 完美周末'],
       ['我摆放玩偶的方式是？', '按身高、按颜色整整齐齐排好 📏', '看当天心情换位置 🔄'],
-      ['给新玩偶起名字的话？', '凭感觉叫“软软”“团团” ☁️', '为了记住带它回家的那天，叫“十月” 📅'],
+      ['如果给 Urupocha 写评价？', '抱住的那一刻，心都软了 🥹', '大小刚好，不掉毛，会回购 ⭐'],
       ['想要的 Urupocha 快卖完了！', '犹豫只会耽误发货，马上下单 🛒', '先收藏，再考虑一晚 🌙']
     ],
     types: {
@@ -1191,7 +1224,23 @@
   var LANG = 'ko', KO = null, LANGS = ['ko', 'en', 'ja', 'zh'], LANG_LABEL = { ko: '한국어', en: 'EN', ja: '日本語', zh: '中文' };
   function L(k, v) {
     var d = I18N[LANG], s = (d && d.ui[k]) || KO_UI[k] || k;
-    return s.replace(/\{(\w+)\}/g, function (m, x) { return v && v[x] != null ? v[x] : m; });
+    s = s.replace(/\{(\w+)\}/g, function (m, x) { return v && v[x] != null ? v[x] : m; });
+    return josa(s);
+  }
+  /* 한국어 조사 자동: {이래} {이에요} {가} {를} {랑} {와} {는} {로} {아} → 앞 글자 받침에 맞춰 바꿈 (엔젤이래 / 미키래) */
+  var JOSA = { '이래': ['이래', '래'], '이에요': ['이에요', '예요'], '가': ['이', '가'], '이': ['이', '가'], '를': ['을', '를'], '을': ['을', '를'],
+               '랑': ['이랑', '랑'], '이랑': ['이랑', '랑'], '와': ['과', '와'], '과': ['과', '와'], '는': ['은', '는'], '은': ['은', '는'], '로': ['으로', '로'], '으로': ['으로', '로'], '아': ['아', '야'], '야': ['아', '야'] };
+  function batchim(ch, rieul) {
+    var c = ch.charCodeAt(0);
+    if (c >= 0xAC00 && c <= 0xD7A3) { var j = (c - 0xAC00) % 28; return rieul ? (j !== 0 && j !== 8) : j !== 0; }
+    if (/[0-9]/.test(ch)) return rieul ? '036'.indexOf(ch) >= 0 : '013678'.indexOf(ch) >= 0;
+    if (/[a-zA-Z]/.test(ch)) return rieul ? /[mnkptbgMNKPTBG]/.test(ch) : /[lmnkptbgLMNKPTBG]/.test(ch);
+    return false;
+  }
+  function josa(s) {
+    return s.replace(/([^\s{}])((?:<\/b>)?)\{(이래|이에요|가|이|를|을|랑|이랑|와|과|는|은|로|으로|아|야)\}/g, function (m, ch, tag, k) {
+      var p = JOSA[k]; return ch + tag + (batchim(ch, k === '로' || k === '으로') ? p[0] : p[1]);
+    });
   }
   function bt(f) { var x = BENEFIT[f]; return x && typeof x === 'object' ? (x[LANG] || x.ko || '') : (x || ''); }
   function snapshotKO() {
@@ -1213,7 +1262,7 @@
     ['#p-match > p.slabel.good', 'best_label'], ['#p-match > p.slabel.bad', 'worst_label'], ['#setCard small', 'set_sub'],
     ['#p-gift .bribbon', 'gift_title'], ['#passBtn b', 'pass_t'], ['#passBtn small', 'pass_s'], ['#onlineBtn b', 'online_t'], ['#onlineBtn small', 'online_s'],
     ['#storeBtn b', 'store_t'], ['#storeBtn small', 'store_s'], ['#moreBtn small', 'more_s'],
-    ['#p-tree h2', 'tree_title'], ['#p-tree .lead', 'tree_lead', 1], ['#inviteBtn', 'invite_btn'], ['#saveTree', 'save_tree'], ['#refreshBtn', 'refresh'], ['#retryBtn', 'retry'], ['#myBtn', 'my_again'],
+    ['#p-tree h2', 'tree_title'], ['#p-tree .lead', 'tree_lead', 1], ['#inviteBtn', 'invite_btn'], ['#saveTree', 'save_tree'], ['#refreshBtn', 'refresh'], ['#retryBtn', 'retry'], ['#myLinkBtn', 'mylink_btn'],
     ['#stickySub', 'sticky_sub'], ['#stickyBtn', 'sticky_btn'], ['#eggClose', 'close'], ['#passClose', 'close'], ['#storeClose', 'close'], ['#imgClose', 'close'], ['#closeShare', 'close'],
     ['.passnote', 'pass_note', 1], ['#storeModal h3', 'store_title'], ['#storeMsg', 'store_msg'], ['.imghint', 'img_hint'], ['#imgShare', 'share'], ['#imgSave', 'save_image'],
     ['#shareModal h3', 'invite_title'], ['#shareModal p', 'invite_desc'], ['#copyBtn', 'copy']
@@ -1228,6 +1277,7 @@
     [].forEach.call($('peek').children, function (im) { if (im.dataset.k) im.alt = CHARS[im.dataset.k].name; });
     if ($('bOffer')) { $('bOffer').textContent = bt('offer'); $('bNote').textContent = bt('note'); }
     if (FROM && (!me || me.id !== FROM)) $('invite').textContent = L('invited', { nick: FROM_NAME || L('friend') });
+    if (typeof homeButtons === 'function') homeButtons();
     [].forEach.call(document.querySelectorAll('.langs'), function (box) {
       [].forEach.call(box.children, function (b) { b.classList.toggle('on', b.dataset.l === LANG); });
     });
@@ -1292,7 +1342,7 @@
     best: '서로가 서로의 최고의 우루포차! 같이 있으면 말랑말랑 행복이 두 배예요.',
     twin: '코드까지 똑같은 소울 쌍둥이. 말 안 해도 다 통해요.',
     one: '딱 한 군데만 달라서 더 재밌는 사이. 서로 부족한 점을 쏙 채워줘요.',
-    two: '닮은 듯 다른 매력으로 대화가 끊이질 않는 보송한 사이예요.',
+    two: '닮은 듯 다른 매력으로 대화가 끊이지 않는 보송한 사이예요.',
     three: '다른 점이 많아서 오히려 새로운 걸 알려주는 사이예요.',
     four: '완전 반대라서 끌리는 자석 같은 사이! 서로가 신기해요.',
     worst: '티격태격하지만 미워할 수 없는 사이. 그래서 더 웃겨요.'
@@ -1464,6 +1514,7 @@
     $('inviterCard').style.display = 'none'; $('invBanner').style.display = 'none';
     placeHider(); syncPage.last = 0;
     show('result'); goPage(0, false); [].forEach.call(document.querySelectorAll('.page'), function (p) { p.scrollTop = 0; }); syncPage();
+    passUsedView();
     loadTree();
   }
 
@@ -1488,7 +1539,7 @@
   }
   function loadTree() {
     $('treeNote').textContent = '';
-    api('tree', { id: me.id }).then(function (r) { treeData = r; drawAll(); setRarity(r.stats); })
+    api('tree', { id: me.id, from: FROM }).then(function (r) { treeData = r; drawAll(); setRarity(r.stats); if (r.redeemed !== undefined) setRedeemed(r.redeemed); })
       .catch(function (e) {
         treeData = demoTree(); drawAll(); setRarity({ same: 128, total: 1532 });
         $('treeNote').textContent = API_URL ? L('tree_err') : L('tree_demo');
@@ -1770,7 +1821,44 @@
   }
 
   $('startBtn').addEventListener('click', start);
-  $('myBtn').addEventListener('click', function () { if (!me || !TYPES[me.code]) return; renderResult(me.code); setTimeout(function () { goPage(3, false); syncPage(); }, 30); });
+  /* 이미 결과가 있는 사람: 다시 안 해도 내 결과 그대로 보기 · 초대받았으면 그 친구와 연결 */
+  function hasResult() { return !!(me && me.id && me.code && TYPES[me.code]); }
+  function isInvited() { return !!(FROM && (!me || me.id !== FROM)); }
+  function homeButtons() {
+    var has = hasResult(), inv = isInvited(), my = $('myBtn'), st = $('startBtn');
+    my.style.display = has ? '' : 'none';
+    my.textContent = has && inv ? L('join_btn', { nick: FROM_NAME || L('friend') }) : L('my_again');
+    st.textContent = has ? L('retake_btn') : L('start');
+    if (has) { my.className = 'btn big shine'; st.className = 'btn soft'; $('nick').parentNode.insertBefore(my, $('nick')); my.style.margin = '0 0 12px'; }
+    else { my.className = 'btn mint'; st.className = 'btn big shine'; }
+    if (inv) { $('invite').style.display = 'block'; $('invite').textContent = has ? L('invited_has', { nick: FROM_NAME || L('friend') }) : L('invited', { nick: FROM_NAME || L('friend') }); }
+  }
+  $('myBtn').addEventListener('click', function () {
+    if (!hasResult()) return;
+    var inv = isInvited(), go = function () { renderResult(me.code); setTimeout(function () { goPage(inv ? 1 : 3, false); syncPage(); }, 30); };
+    if (inv && API_URL) {
+      this.disabled = true; var b = this;
+      api('save', { id: me.id, nickname: me.nickname, code: me.code, character: CHARS[TYPES[me.code].c].name, parent: FROM })
+        .catch(function () {}).then(function () { b.disabled = false; track('join', FROM); go(); });
+    } else go();
+  });
+  $('myLinkBtn').addEventListener('click', function () {
+    var url = location.href.split('?')[0].split('#')[0] + '?me=' + me.id, full = L('mylink_text') + '\n' + url;
+    track('mylink', '');
+    try { navigator.clipboard.writeText(url).then(function () { toast(L('mylink_copied')); }, function () { openShare(full); }); } catch (e) { openShare(full); }
+  });
+  /* ?me=내ID 링크로 들어오면 다른 폰·앱에서도 내 결과 불러오기 */
+  (function () {
+    var mid = qs.get('me');
+    if (!/^[A-Z0-9]{8}$/.test(mid || '')) return;
+    try { qs.delete('me'); history.replaceState(null, '', location.pathname + (qs.toString() ? '?' + qs.toString() : '') + location.hash); } catch (e) {}
+    if (me && me.id === mid && me.code) return;
+    api('me', { id: mid }).then(function (r) {
+      if (!r || !r.ok || !TYPES[r.code]) return;
+      me = { id: mid, nickname: r.nickname, code: r.code }; saveMe();
+      $('nick').value = r.nickname; homeButtons(); toast(L('restored'));
+    }).catch(function () {});
+  })();
   $('nick').addEventListener('keydown', function (e) { if (e.key === 'Enter' && !e.isComposing) start(); });
   $('optA').addEventListener('click', function (e) { choose(this.dataset.v, e); });
   $('optB').addEventListener('click', function (e) { choose(this.dataset.v, e); });
@@ -1784,7 +1872,7 @@
     if (pets === 1) track('pet', current.ch.name);
   });
   // 쓰담 5 · 10 · 15 · 20 · 30번 스페셜 리액션 (이후 10번마다 작은 축하)
-  var PET_LV = [[0, '아기 쓰담러'], [5, '보들 입문자'], [10, '말랑 단짝'], [15, '폭신 매니아'], [20, '쓰담 장인'], [30, '쓰담 마스터']];
+  var PET_LV = [[0, '아기 쓰담러'], [5, '보들 입문자'], [10, '말랑 단짝'], [15, '폭신 마니아'], [20, '쓰담 장인'], [30, '쓰담 마스터']];
   function lvName() { var n = ''; PET_LV.forEach(function (l) { if (pets >= l[0]) n = l[1]; }); return n; }
   function petPop(k, name) { var m = L(k, { name: name, n: pets }).split('|'); bigPop(m[0], m[1]); }
   function bigPop(title, sub) {
@@ -1861,7 +1949,40 @@
     $('passType').textContent = pname(current.code) + ' · ' + current.type.title;
     $('passOffer').textContent = bt('offer');
     tick(); clearInterval(passTimer); passTimer = setInterval(tick, 1000);
+    $('staffForm').style.display = 'none'; $('staffMsg').textContent = ''; $('staffPin').value = ''; $('staffAmt').value = '';
+    passUsedView();
     $('passModal').classList.add('on');
+  });
+  /* 매장 혜택 사용 처리 (직원용) — 서버 Redeems 시트에 기록, 같은 참여자는 1회만 */
+  function fmtAt(t) { var d = new Date(t), z = function (n) { return (n < 10 ? '0' : '') + n; }; return isNaN(d) ? '' : (d.getMonth() + 1) + '/' + d.getDate() + ' ' + z(d.getHours()) + ':' + z(d.getMinutes()); }
+  var STORE_KO = STORES.map(function (x) { return x.name; });   // 서버에는 한국어 매장명으로 기록
+  function storeLabel(name) { var i = STORE_KO.indexOf(name); return i >= 0 ? STORES[i].name : (name || ''); }
+  function passUsedView() {
+    var u = me && me.redeemed, box = document.querySelector('#passModal .pass');
+    box.classList.toggle('used', !!u);
+    $('staffBox').style.display = u ? 'none' : '';
+    $('usedStamp').style.display = u ? 'inline-block' : 'none';
+    if (u) $('usedStamp').innerHTML = '✔ ' + L('used_t') + '<small>' + L('used_s', { at: fmtAt(u.at), store: storeLabel(u.store) }).replace(/[<>]/g, '') + '</small>';
+    $('passBtn').classList.toggle('used', !!u);
+    if (u) $('passBtn').querySelector('small').textContent = L('used_s', { at: fmtAt(u.at), store: storeLabel(u.store) });
+  }
+  function setRedeemed(u) { if (!me) return; me.redeemed = u || null; saveMe(); passUsedView(); }
+  STORE_KO.forEach(function (n) { var o = document.createElement('option'); o.value = n; o.textContent = n; $('staffStore').appendChild(o); });
+  $('staffOpen').addEventListener('click', function () { $('staffForm').style.display = 'grid'; $('staffOpen').style.display = 'none'; });
+  $('staffAmt').addEventListener('input', function () { var v = this.value.replace(/[^0-9]/g, ''); this.value = v ? Number(v).toLocaleString('ko-KR') : ''; });
+  $('staffOk').addEventListener('click', function () {
+    var store = $('staffStore').value, pin = $('staffPin').value.trim(), amt = Number($('staffAmt').value.replace(/[^0-9]/g, '')) || '';
+    if (!store) { $('staffMsg').textContent = '매장을 선택해 주세요'; return; }
+    if (!pin) { $('staffMsg').textContent = '직원 확인 코드를 입력해 주세요'; return; }
+    var b = this; b.disabled = true; $('staffMsg').textContent = '확인 중…';
+    var req = API_URL ? api('redeem', { id: me.id, nickname: me.nickname, code: me.code, character: current ? current.ch.name : '', store: store, pin: pin, amount: amt })
+                      : Promise.resolve(pin === '0000' ? { ok: true, at: new Date().toISOString(), store: store } : { ok: false, reason: 'pin' });   // 데모: 0000
+    req.then(function (r) {
+      b.disabled = false;
+      if (r && r.ok) { setRedeemed({ at: r.at, store: r.store }); toast('✔ 사용 처리 완료'); return; }
+      if (r && r.reason === 'used') { setRedeemed({ at: r.at, store: r.store }); $('staffMsg').textContent = '이미 사용된 혜택이에요'; return; }
+      $('staffMsg').textContent = r && r.reason === 'pin' ? '직원 확인 코드가 맞지 않아요' : '처리하지 못했어요. 다시 시도해 주세요';
+    }).catch(function () { b.disabled = false; $('staffMsg').textContent = '연결이 불안정해요. 다시 시도해 주세요'; });
   });
   $('passClose').addEventListener('click', function () { clearInterval(passTimer); $('passModal').classList.remove('on'); });
   $('onlineBtn').addEventListener('click', function () {
@@ -1906,7 +2027,7 @@
 
   $('closeShare').addEventListener('click', function () { $('shareModal').classList.remove('on'); });
   $('backBtn').addEventListener('click', function () { if (step > 0) { step--; renderQuestion(); } });
-  $('retryBtn').addEventListener('click', function () { window.scrollTo(0, 0); $('myBtn').style.display = ''; $('stickyBuy').classList.remove('on'); show('home'); });
+  $('retryBtn').addEventListener('click', function () { window.scrollTo(0, 0); homeButtons(); $('stickyBuy').classList.remove('on'); show('home'); });
   $('inviteBtn').addEventListener('click', invite);
   $('refreshBtn').addEventListener('click', loadTree);
   $('takeBtn').addEventListener('click', function () { track('product', current.ch.name); });
@@ -1923,7 +2044,6 @@
   ['oyster', 'cheshire', 'tigger', 'eeyore', 'lumiere', 'moana'].forEach(function (k) { var i = document.createElement('img'); i.src = IMAGES[k]; i.alt = CHARS[k].name; i.dataset.k = k; $('peek').appendChild(i); });
   load();
   if (me && me.nickname) $('nick').value = me.nickname;
-  if (me && me.id && me.code && TYPES[me.code]) $('myBtn').style.display = '';
   if (FROM && (!me || me.id !== FROM)) { $('invite').style.display = 'block'; $('invite').textContent = L('invited', { nick: FROM_NAME || L('friend') }); }
   $('hider').src = IMAGES.oyster;
   initLang();
