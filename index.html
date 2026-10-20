@@ -1483,7 +1483,7 @@
       mk(root, me.nickname, me.code, '', 0),
       mk('D1', DEMO_NAMES[0], 'PMKN', root, 1), mk('D2', DEMO_NAMES[1], 'CWKN', root, 1), mk('D3', DEMO_NAMES[2], 'PWHR', root, 1),
       mk('D4', DEMO_NAMES[3], 'CMKN', root, 1), mk('D5', DEMO_NAMES[4], 'CWHR', root, 1),
-      mk('D6', DEMO_NAMES[5], 'CMHN', 'D2', 2), mk('D7', DEMO_NAMES[6], 'PWKN', 'D2', 2), mk('D8', DEMO_NAMES[7], 'PMHR', 'D3', 2), mk('D9', DEMO_NAMES[8], 'CWKR', 'D5', 2)
+      mk('D6', DEMO_NAMES[5], 'CMHN', root, 1), mk('D7', DEMO_NAMES[6], 'PWKN', root, 1), mk('D8', DEMO_NAMES[7], 'PMHR', root, 1)
     ] };
   }
   function loadTree() {
@@ -1499,11 +1499,11 @@
     if (!r.nodes || !r.nodes.length) r.nodes = [{ id: me.id, nickname: me.nickname, code: me.code, parent: '', depth: 0 }];
     r.nodes[0].code = me.code;
     var inv = r.inviter || (FROM ? { nickname: FROM_NAME || L('friend'), code: '' } : null);
-    var nodes = r.nodes.slice(), invIn = false;
+    var nodes = r.nodes.filter(function (n) { return n.depth <= 1; }), invIn = false;   // 내가 직접 초대한 친구만
     if (inv && inv.code && TYPES[inv.code] && !nodes.some(function (n) { return n.id === inv.id; })) {
-      nodes.push({ id: inv.id || 'INVITER', nickname: inv.nickname, code: inv.code, parent: me.id, depth: 1, inv: true }); invIn = true;
+      nodes.push({ id: inv.id || 'INVITER', nickname: inv.nickname, code: inv.code, parent: nodes[0].id, depth: 1, inv: true }); invIn = true;
     }
-    $('treeBadge').textContent = r.demo ? L('badge_demo') : L('badge_friends', { n: (r.total || 0) + (invIn ? 1 : 0) });
+    $('treeBadge').textContent = r.demo ? L('badge_demo') : L('badge_friends', { n: nodes.length - 1 });
     drawTree(nodes);
     if (inv && inv.code && TYPES[inv.code]) {
       var lv = compat(me.code, inv.code), LV = LEVELS[lv];
